@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+#-*- coding:utf-8
+
+# This should be placed in the Snakefile.
+
+##-----------------------------------------------##
+## Working directory                             ##
+## Adapt to your needs                           ##
+##-----------------------------------------------##
+
+BASE_DIR = "/Users/puthier/git/abd/practical/snakemake/projects"
+WDIR = BASE_DIR + "/t-cell_analysis"
+workdir: WDIR
+message("The current working directory is " + WDIR) 
+
+INDEX = BASE_DIR + "/indexes/bowtie2/mm10/chr19"
+GTF   = BASE_DIR + "/annotations/gtf/GRCm38.83.chr19.gtf"
+CHR   = BASE_DIR + "/annotations/txt/chromInfo_mm10.txt"
+FASTA = BASE_DIR + "/indexes/bowtie2/mm10/chr19.fa"
+
+SAMPLES, = glob_wildcards("samples/raw/{smp}_R1.fq.gz")
+NB_SAMPLES = len(SAMPLES)
+
+for smp in SAMPLES:
+  message("Sample " + smp + " will be processed")
+
+
+
+rule trimming:
+  input:  fwd="samples/raw/{smp}_R1.fq.gz", rev="samples/raw/{smp}_R2.fq.gz"
+  output: fwd="samples/trimmed/{smp}_R1_t.fq", 
+          rev="samples/trimmed/{smp}_R2_t.fq", 
+          single="samples/trimmed/{smp}_R1_singletons.fq"
+  message: """--- Trimming."""
+  shell: """
+        sickle pe -f {input.fwd} -r {input.rev}  -l 40 -q 20 -t sanger  -o {output.fwd} -p {output.rev} -s {output.single} &> {input.fwd}.log                                                                               
+  """
+
+
