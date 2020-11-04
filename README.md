@@ -1,4 +1,4 @@
 # BGI
-the second place where i work.
+##the second place where i work.
 
-record the scripts writed by me.
+##*record the scripts writed by me.
