@@ -58,6 +58,7 @@ class LookFile(object):
         n = 0
         with self.safe_open(self.infile, 'r') as fr:
             for line in fr:
+                line = line if isinstance(line, str) else bytes.decode(line)
                 if self.ignore:
                     if line.startswith(self.ignore):
                         continue
