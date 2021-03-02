@@ -22,6 +22,9 @@ from django.urls import path, include
 from sales.views import listorders
 from sales.views import helloworld
 
+# 静态文件服务
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +37,10 @@ urlpatterns = [
     path('sales/', include('sales.urls')),
 
     path('lmt/test/', helloworld),
-]
+    
+    # 凡是 url 以 api/mgr  开头的，
+    # 都根据 mgr.urls 里面的 子路由表进行路由
+    path('api/mgr/', include('mgr.urls'))
+
+    
+] + static("/", document_root="./z_dist")
